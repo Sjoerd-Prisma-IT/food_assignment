@@ -1,0 +1,51 @@
+{
+  "name": "fenx-frontend",
+  "version": "0.1.0",
+  "description": "FENX Frontend",
+  "author": "lpec",
+  "dependencies": {
+    "es6-shim": "^0.35.3",
+    "es5-shim": "^4.5.10",
+    "react": "^16.2.0",
+    "@types/react": "16.0.31",
+    "react-dom": "^16.2.0",
+    "@types/react-dom": "^16.0.3",
+    "redux": "^3.7.2",
+    "react-redux": "^5.0.6",
+    "@types/react-redux": "^5.0.14",
+    "redux-persist": "^4.3.1",
+    "@types/redux-persist": "^4.3.1",
+    "reactstrap": "^5.0.0-alpha.3",
+    "@types/reactstrap": "^5.0.10",
+    "react-transition-group": "^2.2.1",
+    "react-popper": "^0.7.5",
+    "rc-slider": "^8.6.0",
+    "@types/rc-slider": "^8.2.2",
+    "webpack": "^3.10.0"
+  },
+  "scripts": {
+    "watch": "webpack --watch -d",
+    "start": "webpack-dev-server --open"
+  },
+  "devDependencies": {
+    "babel-core": "^6.18.2",
+    "babel-loader": "^6.2.7",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.16.0",
+    "svg-react-loader": "^0.4.5",
+    "style-loader": "^0.19.1",
+    "css-loader": "^0.28.7",
+    "typings-for-css-modules-loader": "^1.7.0",
+    "typescript": "^2.6.2",
+    "awesome-typescript-loader": "^3.4.1",
+    "source-map-loader": "^0.2.3",
+    "tslint": "^5.8.0",
+    "webpack-dev-server": "^2.9.7",
+    "redux-devtools-extension": "^2.13.2",
+    "expect.js": "^0.3.1",
+    "deep-freeze": "^0.0.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5"
+  }
+}
