@@ -4,7 +4,7 @@ Project is set up using a starter kit with spring boot, react with webpack and t
 ## Getting started
 
  ```sh
- $ cd spring-boot-react-template
+ $ cd into root of project
  $ mvn install
  $ cd backend
  $ mvn spring-boot:run
