@@ -48,4 +48,13 @@ public class Product {
     public int hashCode() {
         return Objects.hash(name, quantity, price);
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
+    }
 }

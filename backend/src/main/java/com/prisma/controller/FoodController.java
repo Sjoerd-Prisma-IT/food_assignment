@@ -1,21 +1,22 @@
 package com.prisma.controller;
 
-import com.prisma.helper.ProductHelper;
-import com.prisma.model.AmountDTO;
+import com.prisma.helper.ProductLoader;
 import com.prisma.model.Product;
+import com.prisma.model.ProductResultDTO;
+import com.prisma.solver.ProductSolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
+@CrossOrigin
 public class FoodController {
 
     @RequestMapping(value = "/")
@@ -24,29 +25,16 @@ public class FoodController {
     }
 
     @PostMapping(value = "/getProductsForAmount", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Product>> getProductsForAmount(@RequestBody final AmountDTO amount) {
-        final List<Product> products = getProducts(amount);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<ProductResultDTO> getProductsForAmount(@RequestBody final int amount) {
+        final ProductResultDTO productResultDTO = getProducts(amount);
+        return new ResponseEntity<>(productResultDTO, HttpStatus.OK);
     }
 
-    private List<Product> getProducts(final AmountDTO amountDTO) {
-        final ProductHelper productHelper = ProductHelper.getInstance();
-        final List<Product> allProducts = productHelper.getProducts();
-        final List<Product> selectedProducts = amountDTO.getSelectedProducts();
-        final List<Product> remainingProducts = new ArrayList<>(allProducts);
-        remainingProducts.removeAll(selectedProducts);
-
-        final int totalCost = amountDTO.getSelectedProducts()
-                .stream()
-                .map(Product::getPrice)
-                .mapToInt(e -> e)
-                .sum();
-
-        final int remainingAmount = Integer.parseInt(amountDTO.getAmount()) - totalCost;
-
-        return remainingProducts
-                .stream()
-                .filter(product -> product.getPrice() <= remainingAmount)
-                .collect(Collectors.toList());
+    private ProductResultDTO getProducts(final int amount) {
+        final ProductLoader productLoader = ProductLoader.getInstance();
+        final List<Product> allProducts = productLoader.getProducts();
+        final ProductSolver productSolver = new ProductSolver(allProducts.toArray(new Product[allProducts.size()]), amount);
+        productSolver.solve();
+        return new ProductResultDTO(productSolver.getProductResult(), productSolver.getSpentMoney(), productSolver.getResultWeight());
     }
 }

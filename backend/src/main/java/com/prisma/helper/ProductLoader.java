@@ -3,24 +3,27 @@ package com.prisma.helper;
 import com.prisma.model.Product;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.isNull;
 
-public class ProductHelper {
+public class ProductLoader {
 
     private final List<Product> products = new ArrayList<>();
-    private static ProductHelper instance;
+    private static ProductLoader instance;
 
-    private ProductHelper() {
+    private ProductLoader() {
         loadProducts();
     }
 
-    public static ProductHelper getInstance() {
+    public static ProductLoader getInstance() {
         if (isNull(instance)) {
-            instance = new ProductHelper();
+            instance = new ProductLoader();
         }
         return instance;
     }
@@ -45,5 +48,6 @@ public class ProductHelper {
             e.printStackTrace();
         }
     }
+
 
 }

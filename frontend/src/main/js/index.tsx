@@ -1,46 +1,41 @@
 import * as React from "react";
 import * as ReactDOM from 'react-dom';
 import {Product} from './model/product';
+import {Productresponse} from "./model/productresponse";
 
-class Index extends React.Component<{}, { inputAmount: string, selectableProducts: Array<Product>, selectedProducts: Array<Product> }> {
+class Index extends React.Component<{}, { inputAmount: string, totalWeight: number, totalCost: number, suggestedProducts: Array<Product> }> {
 
     constructor(props: any) {
         super(props);
         this.state = {
-            selectedProducts: [],
-            selectableProducts: [],
+            suggestedProducts: [],
+            totalCost: 0,
+            totalWeight: 0,
             inputAmount: '0'
         }
     }
 
     private inputAmountChanged(value: string): void {
-        this.setState({inputAmount: value, selectableProducts: [], selectedProducts: []}, () => {
+        this.setState({inputAmount: value, suggestedProducts: [], totalCost: 0, totalWeight: 0}, () => {
             if (this.state.inputAmount !== "") {
                 this.fetchProducts();
             }
         });
     }
 
-    private selectProduct(product: Product): void {
-        let currentSelectedProducts: Product[] = this.state.selectedProducts;
-        currentSelectedProducts.push(product);
-        this.setState({selectedProducts: currentSelectedProducts}, () => {
-            this.fetchProducts();
-        })
-    }
-
     private fetchProducts() {
         fetch('http://localhost:8080/getProductsForAmount', {
             method: 'POST',
             headers: {'Content-type': 'application/json'},
-            body: JSON.stringify({
-                'amount': this.state.inputAmount,
-                'selectedProducts': this.state.selectedProducts
-            })
+            body: this.state.inputAmount
         }).then(r => r.json()).then(res => {
             if (res) {
-                let products: Array<Product> = res as Product[];
-                this.setState({selectableProducts: products});
+                let productResponse: Productresponse = res as Productresponse;
+                this.setState({
+                    suggestedProducts: productResponse.products,
+                    totalWeight: productResponse.weight,
+                    totalCost: productResponse.amount
+                });
             }
         });
     }
@@ -60,33 +55,22 @@ class Index extends React.Component<{}, { inputAmount: string, selectableProduct
                             <th>Product</th>
                             <th>Quantity</th>
                             <th>Price</th>
-                            <th/>
                             {
-                                this.state.selectableProducts.map(product =>
+                                this.state.suggestedProducts.map(product =>
                                     <tr>
                                         <td>{product.name}</td>
                                         <td>{product.quantity}</td>
                                         <td>{product.price}</td>
-                                        <td>
-                                            <button onClick={() => this.selectProduct(product)}>buy</button>
-                                        </td>
                                     </tr>
                                 )
                             }
+                            <tr>
+                                <td><b>Total</b></td>
+                                <td><b>{this.state.totalWeight}</b></td>
+                                <td><b>{this.state.totalCost}</b></td>
+                            </tr>
                         </table>
-                    </div>
-                    <div style={{width: '40%', float: 'left', marginTop: '20px'}}>
-                        Selected products
-                        <ul>
-                            {
-                                this.state.selectedProducts.map(product =>
-                                    <li>{product.name}</li>
-                                )
-                            }
-                        </ul>
-                        total: {
-                        this.state.selectedProducts.reduce((sum: number, p: Product) => sum + p.price, 0)
-                    }
+
                     </div>
                 </div>
             </div>
